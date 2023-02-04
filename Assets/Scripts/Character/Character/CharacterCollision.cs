@@ -13,7 +13,6 @@ public class CharacterCollision : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         characterAI = GetComponent<CharacterAI>();
-
     }
 
     private void OnTriggerEnter(Collider other)

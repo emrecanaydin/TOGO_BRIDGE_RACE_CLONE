@@ -5,14 +5,14 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public float moveSpeed;
-    public float turnSpeed;
     public DynamicJoystick dynamicJoystick;
 
+    GameManager GM;
     Animator playerAnimator;
 
     private void Start()
     {
+        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         playerAnimator = GetComponent<Animator>();
     }
 
@@ -24,13 +24,13 @@ public class PlayerMovement : MonoBehaviour
 
         playerAnimator.SetFloat("MoveSpeed", Mathf.Abs(dynamicJoystick.Vertical + dynamicJoystick.Horizontal));
 
-        Vector3 position = new Vector3(horizontal * moveSpeed * Time.deltaTime, 0, vertical * moveSpeed * Time.deltaTime);
+        Vector3 position = new Vector3(horizontal * GM.playerMoveSpeed * Time.deltaTime, 0, vertical * GM.playerMoveSpeed * Time.deltaTime);
         Vector3 rotation = Vector3.forward * vertical + Vector3.right * horizontal;
 
         transform.position += position;
         if (rotation != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rotation), turnSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rotation), GM.playerTurnSpeed * Time.deltaTime);
         }
 
     }

@@ -12,6 +12,9 @@ TagManager:
   - Enemy
   - CollectableGreen
   - Step
+  - PassiveStep
+  - InvisibleLadderStart
+  - InvisibleLadderObstacle
   layers:
   - Default
   - TransparentFX
