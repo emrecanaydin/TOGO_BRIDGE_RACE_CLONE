@@ -1221,7 +1221,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasTarget: 0
-  radius: 5
   targets: []
 --- !u!114 &8392748948755275295
 MonoBehaviour:
@@ -1235,6 +1234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8788e22a2abfc543846b945a955c95d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterMaterial: {fileID: 0}
   collectPoint: {fileID: 1774177845042506612}
   targetTag: CollectableOrange
   collectedList: []

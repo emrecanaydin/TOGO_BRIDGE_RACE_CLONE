@@ -29,14 +29,6 @@ public class CharacterAI : MonoBehaviour
         ChooseTarget();
     }
 
-    void DecideGoToLadder()
-    {
-        if(characterController.collectedList.Count >= 5)
-        {
-
-        }
-    }
-
     void DetectTargetsAndAddList(Transform parent)
     {
         foreach (Transform child in parent)
@@ -52,24 +44,36 @@ public class CharacterAI : MonoBehaviour
     {
         if (targets.Count > 0 && !hasTarget)
         {
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position, GM.overlapSphereRadius);
-            List<Vector3> targetPositions = new List<Vector3>();
-            foreach (var collider in hitColliders)
+
+            bool goToRope = DetectGoingRope();
+
+            if (goToRope)
             {
-                if (collider.tag == characterController.targetTag)
+                Transform target = GM.laddersList[0].transform.Find("Middle").GetChild(characterController.collectedList.Count - 2);
+                targetPosition = target.position;
+                Debug.Log(target);
+            } else
+            {
+                Collider[] hitColliders = Physics.OverlapSphere(transform.position, GM.overlapSphereRadius);
+                List<Vector3> targetPositions = new List<Vector3>();
+                foreach (var collider in hitColliders)
                 {
-                    targetPositions.Add(collider.transform.position);
+                    if (collider.tag == characterController.targetTag)
+                    {
+                        targetPositions.Add(collider.transform.position);
+                    }
+                }
+                if (targetPositions.Count > 0)
+                {
+                    targetPosition = targetPositions[0];
+                }
+                else
+                {
+                    int random = Random.Range(0, targets.Count);
+                    targetPosition = targets[random].transform.position;
                 }
             }
-            if (targetPositions.Count > 0)
-            {
-                targetPosition = targetPositions[0];
-            }
-            else
-            {
-                int random = Random.Range(0, targets.Count);
-                targetPosition = targets[random].transform.position;
-            }
+
             hasTarget = true;
             navMeshAgent.SetDestination(targetPosition);
             characterAnimator.SetFloat("MoveSpeed", 1);
@@ -78,6 +82,12 @@ public class CharacterAI : MonoBehaviour
         {
             characterAnimator.SetFloat("MoveSpeed", 0);
         }
+    }
+
+    bool DetectGoingRope()
+    {
+        int random = Random.Range(0, 2);
+        return characterController.collectedList.Count >= characterController.maximumLoad && random == 0;
     }
 
 }

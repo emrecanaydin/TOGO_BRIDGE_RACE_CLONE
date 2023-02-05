@@ -6,7 +6,6 @@ TagManager:
   tags:
   - GameManager
   - UIManager
-  - Collectable
   - CollectableOrange
   - CollectableBlue
   - Enemy
@@ -15,6 +14,7 @@ TagManager:
   - PassiveStep
   - InvisibleLadderStart
   - InvisibleLadderObstacle
+  - DroppedCollectable
   layers:
   - Default
   - TransparentFX
