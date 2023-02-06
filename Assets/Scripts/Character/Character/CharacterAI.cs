@@ -14,6 +14,7 @@ public class CharacterAI : MonoBehaviour
     NavMeshAgent navMeshAgent;
     Animator characterAnimator;
     Vector3 targetPosition;
+    public bool isGoingRope;
 
     void Start()
     {
@@ -51,9 +52,10 @@ public class CharacterAI : MonoBehaviour
             {
                 Transform target = GM.laddersList[0].transform.Find("Middle").GetChild(characterController.collectedList.Count - 2);
                 targetPosition = target.position;
-                Debug.Log(target);
+                isGoingRope = true;
             } else
             {
+                Debug.Log(2);
                 Collider[] hitColliders = Physics.OverlapSphere(transform.position, GM.overlapSphereRadius);
                 List<Vector3> targetPositions = new List<Vector3>();
                 foreach (var collider in hitColliders)
@@ -73,15 +75,36 @@ public class CharacterAI : MonoBehaviour
                     targetPosition = targets[random].transform.position;
                 }
             }
-
             hasTarget = true;
             navMeshAgent.SetDestination(targetPosition);
             characterAnimator.SetFloat("MoveSpeed", 1);
+        } else if (isGoingRope)
+        {
+            bool isReached = IsCharacterReachedRope();
+            if (isReached)
+            {
+                isGoingRope = false;
+            }
         }
         else if (targets.Count == 0)
         {
             characterAnimator.SetFloat("MoveSpeed", 0);
         }
+    }
+
+    public bool IsCharacterReachedRope()
+    {
+        if (!navMeshAgent.pathPending)
+        {
+            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+            {
+                if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     bool DetectGoingRope()
