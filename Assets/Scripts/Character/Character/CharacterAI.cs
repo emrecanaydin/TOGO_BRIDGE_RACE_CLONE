@@ -55,7 +55,6 @@ public class CharacterAI : MonoBehaviour
                 isGoingRope = true;
             } else
             {
-                Debug.Log(2);
                 Collider[] hitColliders = Physics.OverlapSphere(transform.position, GM.overlapSphereRadius);
                 List<Vector3> targetPositions = new List<Vector3>();
                 foreach (var collider in hitColliders)
@@ -72,7 +71,7 @@ public class CharacterAI : MonoBehaviour
                 else
                 {
                     int random = Random.Range(0, targets.Count);
-                    targetPosition = targets[random].transform.position;
+                    targetPosition = targets[Random.Range(0, targets.Count)].transform.position;
                 }
             }
             hasTarget = true;
@@ -83,6 +82,7 @@ public class CharacterAI : MonoBehaviour
             bool isReached = IsCharacterReachedRope();
             if (isReached)
             {
+                hasTarget = false;
                 isGoingRope = false;
             }
         }
@@ -92,7 +92,7 @@ public class CharacterAI : MonoBehaviour
         }
     }
 
-    public bool IsCharacterReachedRope()
+    bool IsCharacterReachedRope()
     {
         if (!navMeshAgent.pathPending)
         {

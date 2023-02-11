@@ -5,6 +5,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
+    [Header("Prefabs")]
+    public GameObject blueCollectable;
+    public GameObject greenCollectable;
+    public GameObject orangeCollectable;
+
     [Header("General Settings")]
     public Material droppedCollectableMaterial;
 

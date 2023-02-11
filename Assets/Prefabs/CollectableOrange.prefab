@@ -218,13 +218,13 @@ GameObject:
   - component: {fileID: 5154789468898319206}
   - component: {fileID: 5154789468898319207}
   - component: {fileID: 5154789468898319204}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CollectableOrange
   m_TagString: CollectableOrange
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5154789468898319225
 Transform:
   m_ObjectHideFlags: 0
