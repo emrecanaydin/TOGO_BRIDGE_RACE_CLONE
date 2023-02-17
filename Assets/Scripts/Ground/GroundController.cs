@@ -14,7 +14,6 @@ public class GroundController : MonoBehaviour
     private void Start()
     {
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        InvokeRepeating("GenerateCube", 0f, 0.5f);
     }
 
     public void GenerateCube()
@@ -23,19 +22,22 @@ public class GroundController : MonoBehaviour
         Vector3 createdPosition = GenerateRandomPosition();
         createdCollectable.transform.parent = parent;
         createdCollectable.transform.localPosition = createdPosition;
-        createdCollectable.SetActive(true);
-        Debug.Log(Physics.CheckSphere(createdPosition, 1));
-        //foreach (var collider in hitColliders)
-        //{
-        //    Debug.Log(collider.tag);
-        //}
+        if (CheckIfCollisionWithCollectble(createdCollectable.transform.position))
+        {
+            Destroy(createdCollectable, 0f);
+            GenerateCube();
+        }
     }
 
     Vector3 GenerateRandomPosition()
     {
-        //Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 0.065f, Random.Range(minZ, maxZ));
-        Vector3 randomPosition = new Vector3(-1.51f, 0.065f, -19.94f);
+        Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 0.065f, Random.Range(minZ, maxZ));
         return randomPosition;
+    }
+
+    bool CheckIfCollisionWithCollectble(Vector3 position)
+    {
+        return Physics.CheckSphere(position, 1, layerMask);
     }
 
 }

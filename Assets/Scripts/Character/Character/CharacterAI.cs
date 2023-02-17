@@ -50,7 +50,7 @@ public class CharacterAI : MonoBehaviour
 
             if (goToRope)
             {
-                Transform target = GM.laddersList[0].transform.Find("Middle").GetChild(characterController.collectedList.Count - 2);
+                Transform target = GM.laddersList[0].transform.Find("Middle").GetChild(GM.laddersList[0].transform.Find("Middle").childCount - 2);
                 targetPosition = target.position;
                 isGoingRope = true;
             } else
@@ -71,7 +71,7 @@ public class CharacterAI : MonoBehaviour
                 else
                 {
                     int random = Random.Range(0, targets.Count);
-                    targetPosition = targets[Random.Range(0, targets.Count)].transform.position;
+                    targetPosition = targets[random].transform.position;
                 }
             }
             hasTarget = true;

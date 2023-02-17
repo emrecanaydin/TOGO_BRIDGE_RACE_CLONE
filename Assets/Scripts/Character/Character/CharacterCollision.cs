@@ -74,11 +74,19 @@ public class CharacterCollision : MonoBehaviour
 
     void TriggerWithStep(GameObject other)
     {
-        other.GetComponent<Renderer>().material = characterController.characterMaterial;
-        other.GetComponent<MeshRenderer>().enabled = true;
-        other.tag = "PassiveStep";
-        characterController.collectedList.RemoveAt(characterController.collectedList.Count - 1);
-        Destroy(characterController.collectPoint.GetChild(characterController.collectedList.Count).gameObject, 0f);
+        if(characterController.collectedList.Count > 0)
+        {
+            Debug.Log(other.transform.GetSiblingIndex());
+            other.GetComponent<Renderer>().material = characterController.characterMaterial;
+            other.GetComponent<MeshRenderer>().enabled = true;
+            other.tag = "PassiveStep";
+            characterController.collectedList.RemoveAt(characterController.collectedList.Count - 1);
+            Destroy(characterController.collectPoint.GetChild(characterController.collectedList.Count).gameObject, 0f);
+        } else
+        {
+            characterAI.hasTarget = false;
+        }
+
     }
 
     IEnumerator CollisionWithPlayer(GameObject player)
@@ -90,7 +98,7 @@ public class CharacterCollision : MonoBehaviour
         {
             GameObject currentGameObject = player.gameObject.GetComponent<PlayerController>().collectedList[i];
             currentGameObject.transform.DOJump(player.transform.position + new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f)), 3, 1, 1f);
-            currentGameObject.transform.DOLocalRotate(new Vector3(0, 0, 0), .5f);
+            //currentGameObject.transform.DOLocalRotate(new Vector3(0, 0, 0), .5f);
             currentGameObject.tag = "DroppedCollectable";
             currentGameObject.GetComponent<Renderer>().material = GM.droppedCollectableMaterial;
             currentGameObject.transform.parent = GameObject.Find("FirstLevelCollectable").transform;
