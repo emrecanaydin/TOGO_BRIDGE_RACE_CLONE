@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
 
 public class CharacterAI : MonoBehaviour
 {
 
     public bool hasTarget;
+    public bool isGoingRope;
+    public GameObject alreadySelectedRope;
     public List<GameObject> targets = new List<GameObject>();
 
     GameManager GM;
@@ -14,7 +17,6 @@ public class CharacterAI : MonoBehaviour
     NavMeshAgent navMeshAgent;
     Animator characterAnimator;
     Vector3 targetPosition;
-    public bool isGoingRope;
 
     void Start()
     {
@@ -22,15 +24,21 @@ public class CharacterAI : MonoBehaviour
         characterAnimator = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        DetectTargetsAndAddList(GM.firstLevelCollectableParent);
+        DetectTargetsAndAddList(GM.collectableParentList[0]);
     }
 
     void Update()
     {
-        ChooseTarget();
+        if (!GM.isGameOver)
+        {
+            ChooseTarget();
+        } else
+        {
+            characterAnimator.SetFloat("MoveSpeed", 0);
+        }
     }
 
-    void DetectTargetsAndAddList(Transform parent)
+    public void DetectTargetsAndAddList(Transform parent)
     {
         foreach (Transform child in parent)
         {
@@ -50,14 +58,25 @@ public class CharacterAI : MonoBehaviour
 
             if (goToRope)
             {
-                Transform target = GM.laddersList[0].transform.Find("Middle").GetChild(GM.laddersList[0].transform.Find("Middle").childCount - 2);
+                Transform target;
+                GameObject choosedRope = ChooseRope();
+                if(characterController.currentLevel == 2)
+                {
+                    target = choosedRope.transform;
+                }
+                else
+                {
+                    target = choosedRope.transform.Find("Middle").Find("FinalStep");
+                }
                 targetPosition = target.position;
                 isGoingRope = true;
             } else
             {
                 Collider[] hitColliders = Physics.OverlapSphere(transform.position, GM.overlapSphereRadius);
+                var orderedByProximity = hitColliders.OrderBy(c => (transform.position - c.transform.position).sqrMagnitude).ToArray();
+
                 List<Vector3> targetPositions = new List<Vector3>();
-                foreach (var collider in hitColliders)
+                foreach (var collider in orderedByProximity)
                 {
                     if (collider.tag == characterController.targetTag)
                     {
@@ -111,6 +130,37 @@ public class CharacterAI : MonoBehaviour
     {
         int random = Random.Range(0, 2);
         return characterController.collectedList.Count >= characterController.maximumLoad && random == 0;
+    }
+
+    GameObject ChooseRope()
+    {
+
+        int random = Random.Range(0, GM.firstLevelLaddersList.Count);
+        GameObject selectedRope = GM.firstLevelLaddersList[random];
+
+        if (alreadySelectedRope)
+        {
+            return alreadySelectedRope;
+        }
+
+        if(characterController.currentLevel == 1)
+        {
+            int randomSecondLevel = Random.Range(0, GM.secondLevelLaddersList.Count);
+            selectedRope = GM.secondLevelLaddersList[randomSecondLevel];
+        } else if(characterController.currentLevel == 2)
+        {
+            selectedRope = GameObject.Find("FinalPoint");
+        }
+
+        alreadySelectedRope = selectedRope;
+
+        return selectedRope;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 5);
     }
 
 }

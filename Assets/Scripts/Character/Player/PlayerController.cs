@@ -6,6 +6,9 @@ public class PlayerController : MonoBehaviour
 {
     public Material playerMaterial;
     public Transform collectPoint;
+    public string targetTag;
+    public string playerColor;
+    public int currentLevel = 0;
     public List<GameObject> collectedList = new List<GameObject>();
 
     private void Start()

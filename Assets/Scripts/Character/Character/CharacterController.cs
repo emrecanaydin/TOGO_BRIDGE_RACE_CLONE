@@ -8,6 +8,8 @@ public class CharacterController : MonoBehaviour
     public Material characterMaterial;
     public Transform collectPoint;
     public string targetTag;
+    public string characterColor;
+    public int currentLevel = 0;
     public List<GameObject> collectedList = new List<GameObject>();
 
     private void Start()

@@ -1107,7 +1107,7 @@ GameObject:
   - component: {fileID: 9165625820803695782}
   - component: {fileID: 8392748948755275293}
   - component: {fileID: 1774177845997283227}
-  - component: {fileID: 1774177845997283224}
+  - component: {fileID: 1083226285}
   - component: {fileID: 1774177844999209187}
   - component: {fileID: 1774177844999209188}
   - component: {fileID: 8392748948755275295}
@@ -1173,8 +1173,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!135 &1774177845997283224
-SphereCollider:
+--- !u!136 &1083226285
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1183,9 +1183,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.7331648
-  m_Center: {x: 0, y: 0.69736886, z: 0}
+  m_Radius: 0.5
+  m_Height: 1.4735618
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.69129395, z: 0}
 --- !u!195 &1774177844999209187
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1221,6 +1222,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasTarget: 0
+  isGoingRope: 0
+  alreadySelectedRope: {fileID: 0}
   targets: []
 --- !u!114 &8392748948755275295
 MonoBehaviour:
@@ -1234,9 +1237,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8788e22a2abfc543846b945a955c95d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maximumLoad: 10
   characterMaterial: {fileID: 0}
   collectPoint: {fileID: 1774177845042506612}
   targetTag: CollectableOrange
+  characterColor: Orange
+  currentLevel: 0
   collectedList: []
 --- !u!114 &8392748948755275294
 MonoBehaviour:

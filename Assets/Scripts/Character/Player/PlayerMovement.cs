@@ -18,7 +18,17 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!GM.isGameOver)
+        {
+            Movement();
+        } else
+        {
+            playerAnimator.SetFloat("MoveSpeed", 0);
+        }
+    }
 
+    void Movement()
+    {
         float horizontal = dynamicJoystick.Horizontal;
         float vertical = dynamicJoystick.Vertical;
 
@@ -32,7 +42,6 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rotation), GM.playerTurnSpeed * Time.deltaTime);
         }
-
     }
 
 }
