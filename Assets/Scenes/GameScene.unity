@@ -8050,9 +8050,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 558833131}
+  - component: {fileID: 558833132}
   m_Layer: 0
   m_Name: Ladder-2
-  m_TagString: Untagged
+  m_TagString: LadderParent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8075,6 +8076,19 @@ Transform:
   m_Father: {fileID: 1860354284}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &558833132
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558833130}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.591817, y: 4.8067765, z: 11.39168}
+  m_Center: {x: -0.02959299, y: 2.1690228, z: 5.436268}
 --- !u!1 &562908306
 GameObject:
   m_ObjectHideFlags: 0
@@ -10216,7 +10230,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8368739485429794714, guid: 09131e7f5804dcb488b87895a5702386, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12.27
+      value: 7.44
       objectReference: {fileID: 0}
     - target: {fileID: 8368739485429794714, guid: 09131e7f5804dcb488b87895a5702386, type: 3}
       propertyPath: m_LocalRotation.w
@@ -15652,9 +15666,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1154518639}
+  - component: {fileID: 1154518640}
   m_Layer: 0
   m_Name: Ladder-1
-  m_TagString: Untagged
+  m_TagString: LadderParent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15677,6 +15692,19 @@ Transform:
   m_Father: {fileID: 1860354284}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1154518640
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154518638}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.591817, y: 4.8067765, z: 11.39168}
+  m_Center: {x: -0.02959299, y: 2.1690228, z: 5.436268}
 --- !u!1001 &1157419881
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19366,9 +19394,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1425698916}
+  - component: {fileID: 1425698917}
   m_Layer: 0
   m_Name: Ladder-3
-  m_TagString: Untagged
+  m_TagString: LadderParent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19391,6 +19420,19 @@ Transform:
   m_Father: {fileID: 1860354284}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1425698917
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425698915}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.591817, y: 4.8067765, z: 11.39168}
+  m_Center: {x: -0.02959299, y: 2.1690228, z: 5.436268}
 --- !u!4 &1428801687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8665511967566456522, guid: 39f38806c7d4f6945930351746b6e0ac, type: 3}
@@ -29261,7 +29303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5033494347044645145, guid: dac5cbd5497ddb94ebed8dd568b10ab9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12.25
+      value: 9.78
       objectReference: {fileID: 0}
     - target: {fileID: 5033494347044645145, guid: dac5cbd5497ddb94ebed8dd568b10ab9, type: 3}
       propertyPath: m_LocalRotation.w

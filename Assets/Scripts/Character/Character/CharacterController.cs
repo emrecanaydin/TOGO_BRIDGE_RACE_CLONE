@@ -10,6 +10,7 @@ public class CharacterController : MonoBehaviour
     public string targetTag;
     public string characterColor;
     public int currentLevel = 0;
+    public bool IsInLadder;
     public List<GameObject> collectedList = new List<GameObject>();
 
     private void Start()

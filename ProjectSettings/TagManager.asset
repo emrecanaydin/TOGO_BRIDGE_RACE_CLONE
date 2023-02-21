@@ -23,6 +23,7 @@ TagManager:
   - InvisiblePlane
   - FinalPoint
   - WinnerEnemy
+  - LadderParent
   layers:
   - Default
   - TransparentFX

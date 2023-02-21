@@ -44,6 +44,22 @@ public class CharacterCollision : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag == "LadderParent")
+        {
+            characterController.IsInLadder = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "LadderParent")
+        {
+            characterController.IsInLadder = false;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         switch (collision.gameObject.tag)
@@ -58,7 +74,7 @@ public class CharacterCollision : MonoBehaviour
 
     void TriggerWithCollectable(GameObject other)
     {
-        if(other.tag == characterController.targetTag)
+        if (other.tag == characterController.targetTag)
         {
             other.tag = "Untagged";
             other.GetComponent<BoxCollider>().enabled = false;
@@ -82,24 +98,27 @@ public class CharacterCollision : MonoBehaviour
 
     void TriggerWithStep(GameObject other)
     {
-        other.GetComponent<Renderer>().material = characterController.characterMaterial;
-        other.GetComponent<MeshRenderer>().enabled = true;
-        other.tag = "Step-" + characterController.characterColor;
-        characterController.collectedList.RemoveAt(characterController.collectedList.Count - 1);
-        Destroy(characterController.collectPoint.GetChild(characterController.collectedList.Count).gameObject, 0f);
-        if (characterController.collectedList.Count == 0)
+        if(characterController.collectedList.Count > 0)
         {
-            characterAI.hasTarget = false;
-        }
-        if(other.name == "FinalStep")
-        {
-            characterAI.targets.Clear();
-            characterAI.hasTarget = false;
-            characterAI.alreadySelectedRope = null;
-            characterController.currentLevel = characterController.currentLevel + 1;
-            if(characterController.currentLevel <= 2)
+            other.GetComponent<Renderer>().material = characterController.characterMaterial;
+            other.GetComponent<MeshRenderer>().enabled = true;
+            other.tag = "Step-" + characterController.characterColor;
+            characterController.collectedList.RemoveAt(characterController.collectedList.Count - 1);
+            Destroy(characterController.collectPoint.GetChild(characterController.collectedList.Count).gameObject, 0f);
+            if (characterController.collectedList.Count == 0)
             {
-                characterAI.DetectTargetsAndAddList(GM.collectableParentList[characterController.currentLevel]);
+                characterAI.hasTarget = false;
+            }
+            if(other.name == "FinalStep")
+            {
+                characterAI.targets.Clear();
+                characterAI.hasTarget = false;
+                characterAI.alreadySelectedRope = null;
+                characterController.currentLevel = characterController.currentLevel + 1;
+                if(characterController.currentLevel <= 2)
+                {
+                    characterAI.DetectTargetsAndAddList(GM.collectableParentList[characterController.currentLevel]);
+                }
             }
         }
     }
@@ -114,53 +133,54 @@ public class CharacterCollision : MonoBehaviour
 
     IEnumerator CollisionWithPlayer(GameObject player)
     {
-        PlayerController playerController = player.gameObject.GetComponent<PlayerController>();
-        Rigidbody playerRB = player.GetComponent<Rigidbody>();
-        int collectedCount = characterController.collectedList.Count;
-        int playerCollectedCount = playerController.collectedList.Count;
 
-        if(collectedCount > playerCollectedCount)
+        if (!characterController.IsInLadder)
         {
-            playerRB.isKinematic = true;
-            for (int i = playerCollectedCount - 1; i >= 0; i--)
+            PlayerController playerController = player.gameObject.GetComponent<PlayerController>();
+            Rigidbody playerRB = player.GetComponent<Rigidbody>();
+            int collectedCount = characterController.collectedList.Count;
+            int playerCollectedCount = playerController.collectedList.Count;
+            if(collectedCount > playerCollectedCount)
             {
-                GameObject currentGameObject = playerController.collectedList[i];
-                currentGameObject.transform.DOJump(player.transform.position + new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f)), 3, 1, 1f);
-                currentGameObject.tag = "DroppedCollectable";
-                currentGameObject.GetComponent<Renderer>().material = GM.droppedCollectableMaterial;
-                currentGameObject.transform.parent = GM.groundList[playerController.currentLevel].transform;
-            }
-            playerController.collectedList.Clear();
-            yield return new WaitForSeconds(1f);
-            playerRB.isKinematic = false;
-            foreach (var currentGameObject in GameObject.FindGameObjectsWithTag("DroppedCollectable"))
+                playerRB.isKinematic = true;
+                for (int i = playerCollectedCount - 1; i >= 0; i--)
+                {
+                    GameObject currentGameObject = playerController.collectedList[i];
+                    currentGameObject.transform.DOJump(player.transform.position + new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f)), 3, 1, 1f);
+                    currentGameObject.tag = "DroppedCollectable";
+                    currentGameObject.GetComponent<Renderer>().material = GM.droppedCollectableMaterial;
+                    currentGameObject.transform.parent = GM.groundList[playerController.currentLevel].transform;
+                }
+                playerController.collectedList.Clear();
+                yield return new WaitForSeconds(1f);
+                playerRB.isKinematic = false;
+                foreach (var currentGameObject in GameObject.FindGameObjectsWithTag("DroppedCollectable"))
+                {
+                    currentGameObject.transform.Find("Trail").gameObject.SetActive(true);
+                    currentGameObject.GetComponent<BoxCollider>().enabled = true;
+                    currentGameObject.tag = playerController.targetTag;
+                }
+            } else
             {
-                currentGameObject.transform.Find("Trail").gameObject.SetActive(true);
-                currentGameObject.GetComponent<BoxCollider>().enabled = true;
-                currentGameObject.tag = playerController.targetTag;
-            }
-        } else
-        {
-            for (int i = collectedCount - 1; i >= 0; i--)
-            {
-                GameObject currentGameObject = characterController.collectedList[i];
-                currentGameObject.transform.DOJump(player.transform.position + new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f)), 3, 1, 1f);
-                currentGameObject.tag = "DroppedCollectable";
-                currentGameObject.GetComponent<Renderer>().material = GM.droppedCollectableMaterial;
-                currentGameObject.transform.parent = GM.groundList[characterController.currentLevel].transform;
-            }
-            characterController.collectedList.Clear();
-            yield return new WaitForSeconds(1f);
-            characterRB.isKinematic = false;
-            foreach (var currentGameObject in GameObject.FindGameObjectsWithTag("DroppedCollectable"))
-            {
-                currentGameObject.transform.Find("Trail").gameObject.SetActive(true);
-                currentGameObject.GetComponent<BoxCollider>().enabled = true;
-                currentGameObject.tag = characterController.targetTag;
+                for (int i = collectedCount - 1; i >= 0; i--)
+                {
+                    GameObject currentGameObject = characterController.collectedList[i];
+                    currentGameObject.transform.DOJump(player.transform.position + new Vector3(Random.Range(-3f, 3f), 0f, Random.Range(-3f, 3f)), 3, 1, 1f);
+                    currentGameObject.tag = "DroppedCollectable";
+                    currentGameObject.GetComponent<Renderer>().material = GM.droppedCollectableMaterial;
+                    currentGameObject.transform.parent = GM.groundList[characterController.currentLevel].transform;
+                }
+                characterController.collectedList.Clear();
+                yield return new WaitForSeconds(1f);
+                characterRB.isKinematic = false;
+                foreach (var currentGameObject in GameObject.FindGameObjectsWithTag("DroppedCollectable"))
+                {
+                    currentGameObject.transform.Find("Trail").gameObject.SetActive(true);
+                    currentGameObject.GetComponent<BoxCollider>().enabled = true;
+                    currentGameObject.tag = characterController.targetTag;
+                }
             }
         }
-
-
     }
 
 }
