@@ -46,6 +46,21 @@ public class PlayerCollision : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag == "LadderParent")
+        {
+            playerController.IsInLadder = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "LadderParent")
+        {
+            playerController.IsInLadder = false;
+        }
+    }
+
     IEnumerator TriggerWithObstacle(GameObject other)
     {
         Destroy(other.gameObject, 0f);
