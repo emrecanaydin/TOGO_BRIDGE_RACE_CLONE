@@ -21,9 +21,6 @@ public class PlayerCollision : MonoBehaviour
     {
         switch (other.tag)
         {
-            case "InvisibleLadderStart":
-                TriggerWithLadderStart(other.gameObject);
-                break;
             case "Booster":
                 StartCoroutine(TriggerWithBooster(other.gameObject));
                 break;
@@ -34,11 +31,11 @@ public class PlayerCollision : MonoBehaviour
                 TriggerWithFinalPoint();
                 break;
             default:
-                if(other.tag == playerController.targetTag)
+                if (other.tag == playerController.targetTag)
                 {
                     TriggerWithCollectable(other.gameObject);
                 }
-                if(other.tag.StartsWith("Step") && other.tag != "Step-" + playerController.playerColor)
+                if (other.tag.StartsWith("Step") && other.tag != "Step-" + playerController.playerColor)
                 {
                     TriggerWithStep(other.gameObject);
                 }
@@ -48,11 +45,36 @@ public class PlayerCollision : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.tag == "LadderParent")
+        if (other.tag == "LadderParent")
         {
             playerController.IsInLadder = true;
+            Transform invisibleObstacle = other.transform.Find("Middle").transform.Find("InvisibleObstacle");
+            List<Transform> unprocessedStepList = new List<Transform>();
+            foreach (Transform item in other.transform.Find("Middle").transform)
+            {
+                if (item.tag.StartsWith("Step") && item.tag != "Step-" + playerController.playerColor)
+                {
+                    unprocessedStepList.Add(item);
+                }
+            }
+            if (unprocessedStepList.Count > 0)
+            {
+                invisibleObstacle.GetComponent<BoxCollider>().isTrigger = false;
+                for (int i = 0; i < playerController.collectedList.Count; i++)
+                {
+                    if(i < unprocessedStepList.Count)
+                    {
+                        Vector3 position = unprocessedStepList[i].transform.position;
+                        invisibleObstacle.transform.position = position;
+                    }
+                }
+            } else
+            {
+                invisibleObstacle.GetComponent<BoxCollider>().isTrigger = true;
+            }
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "LadderParent")
@@ -68,7 +90,7 @@ public class PlayerCollision : MonoBehaviour
         int collectedCount = playerController.collectedList.Count;
         for (int i = collectedCount - 1; i >= collectedCount - count; i--)
         {
-            if(playerController.collectedList.Count > 0)
+            if (playerController.collectedList.Count > 0)
             {
                 yield return new WaitForSeconds(.1f);
                 GameObject currentGameObject = playerController.collectedList[i];
@@ -95,14 +117,17 @@ public class PlayerCollision : MonoBehaviour
 
     void TriggerWithStep(GameObject other)
     {
-        other.GetComponent<Renderer>().material = playerController.playerMaterial;
-        other.GetComponent<MeshRenderer>().enabled = true;
-        other.tag = "Step-" + playerController.playerColor;
-        playerController.collectedList.RemoveAt(playerController.collectedList.Count - 1);
-        Destroy(playerController.collectPoint.GetChild(playerController.collectedList.Count).gameObject, 0f);
-        if(other.name == "FinalStep")
+        if (playerController.collectedList.Count > 0 && playerController.isGoingUp)
         {
-            playerController.currentLevel = playerController.currentLevel + 1;
+            other.GetComponent<Renderer>().material = playerController.playerMaterial;
+            other.GetComponent<MeshRenderer>().enabled = true;
+            other.tag = "Step-" + playerController.playerColor;
+            playerController.collectedList.RemoveAt(playerController.collectedList.Count - 1);
+            Destroy(playerController.collectPoint.GetChild(playerController.collectedList.Count).gameObject, 0f);
+            if (other.name == "FinalStep")
+            {
+                playerController.currentLevel = playerController.currentLevel + 1;
+            }
         }
     }
 
@@ -112,39 +137,11 @@ public class PlayerCollision : MonoBehaviour
         other.GetComponent<BoxCollider>().enabled = false;
         other.transform.parent = playerController.collectPoint;
         Vector3 position = new Vector3(0, playerController.collectedList.Count * .25f, 0);
-        other.transform.DOLocalJump(position, 1.5f, 1, .45f).OnComplete(() => other.transform.Find("Trail").gameObject.SetActive(false) );
+        other.transform.DOLocalJump(position, 1.5f, 1, .45f).OnComplete(() => other.transform.Find("Trail").gameObject.SetActive(false));
         other.transform.localRotation = Quaternion.Euler(0, 0, 0);
         other.GetComponent<Renderer>().material = playerController.playerMaterial;
         playerController.collectedList.Add(other.gameObject);
         GM.groundList[playerController.currentLevel].GetComponent<GroundController>().GenerateCube(playerController.targetTag);
-    }
-
-    void TriggerWithLadderStart(GameObject other)
-    {
-        if (playerController.collectedList.Count > 0)
-        {
-            Transform invisibleObstacle = other.transform.parent.Find("InvisibleObstacle");
-            invisibleObstacle.GetComponent<BoxCollider>().isTrigger = false;
-            if (playerController.collectedList.Count >= 15)
-            {
-                invisibleObstacle.gameObject.SetActive(false);
-            }
-            else
-            {
-                int count = 0;
-                foreach (Transform child in other.transform.parent)
-                {
-                    if(child.gameObject.tag == "Step" && child.gameObject.tag != "Step-" + playerController.playerColor)
-                    {
-                        count = count + 1;
-                    }
-                }
-                GameObject maxStepObject = GameObject.FindGameObjectsWithTag("Step")[playerController.collectedList.Count - 1];
-                Vector3 obstaclePosition = maxStepObject.transform.position;
-                obstaclePosition.y = obstaclePosition.y * 1.5f;
-                invisibleObstacle.transform.position = obstaclePosition;
-            }
-        }
     }
 
     void TriggerWithFinalPoint()

@@ -337,7 +337,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 89c844152cf8dca47bab5c59d25e85b3, type: 2}
+  - {fileID: 2100000, guid: 93e74f1b9d065a8459fd467e77a9f649, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1112,7 +1112,7 @@ GameObject:
   - component: {fileID: 1774177844999209188}
   - component: {fileID: 8392748948755275295}
   - component: {fileID: 8392748948755275294}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Character
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1237,12 +1237,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8788e22a2abfc543846b945a955c95d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maximumLoad: 10
+  maximumLoad: 6
   characterMaterial: {fileID: 0}
   collectPoint: {fileID: 1774177845042506612}
-  targetTag: CollectableOrange
-  characterColor: Orange
+  targetTag: CollectableGreen
+  characterColor: Green
   currentLevel: 0
+  IsInLadder: 0
   collectedList: []
 --- !u!114 &8392748948755275294
 MonoBehaviour:

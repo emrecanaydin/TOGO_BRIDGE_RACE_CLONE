@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public string playerColor;
     public int currentLevel = 0;
     public bool IsInLadder;
+    public bool isGoingUp;
     public List<GameObject> collectedList = new List<GameObject>();
 
     private void Start()

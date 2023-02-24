@@ -25,9 +25,6 @@ public class CharacterCollision : MonoBehaviour
     {
         switch (other.tag)
         {
-            case "InvisibleLadderStart":
-                TriggerWithLadderStart(other.gameObject);
-                break;
             case "FinalPoint":
                 TriggerWithFinalPoint();
                 break;
@@ -88,12 +85,6 @@ public class CharacterCollision : MonoBehaviour
             characterAI.hasTarget = false;
             GM.groundList[characterController.currentLevel].GetComponent<GroundController>().GenerateCube(characterController.targetTag);
         }
-    }
-
-    void TriggerWithLadderStart(GameObject other)
-    {
-        Transform invisibleObstacle = other.transform.parent.Find("InvisibleObstacle");
-        invisibleObstacle.GetComponent<BoxCollider>().isTrigger = true;
     }
 
     void TriggerWithStep(GameObject other)
