@@ -7,11 +7,13 @@ public class PlayerCollision : MonoBehaviour
 {
 
     PlayerController playerController;
+    Animator playerAnimator;
     GameManager GM;
     UIManager UI;
 
     private void Start()
     {
+        playerAnimator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
         UI = GameObject.FindGameObjectWithTag("UIManager").GetComponent<UIManager>();
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
@@ -117,7 +119,7 @@ public class PlayerCollision : MonoBehaviour
 
     void TriggerWithStep(GameObject other)
     {
-        if (playerController.collectedList.Count > 0 && playerController.isGoingUp)
+        if (playerController.collectedList.Count > 0)
         {
             other.GetComponent<Renderer>().material = playerController.playerMaterial;
             other.GetComponent<MeshRenderer>().enabled = true;
@@ -146,18 +148,16 @@ public class PlayerCollision : MonoBehaviour
 
     void TriggerWithFinalPoint()
     {
+        for (int i = 0; i < playerController.collectedList.Count; i++)
+        {
+            GameObject currentGameObject = playerController.collectedList[i];
+            Destroy(currentGameObject);
+        }
         GM.isGameOver = true;
         UI.gamePlayPanel.SetActive(false);
         UI.winPanel.SetActive(true);
-        //int collectedCount = playerController.collectedList.Count;
-        //for (int i = 0; i < collectedCount; i++)
-        //{
-        //    GameObject currentGameObject = playerController.collectedList[i];
-        //    Vector3 position = currentGameObject.transform.position;
-        //    position.y = 50;
-        //    currentGameObject.transform.DOLocalJump(position, 1.5f, 1, .45f).OnComplete(() => Debug.Log(1) );
-        //}
-        //playerController.collectedList.Clear();
+        playerController.collectedList.Clear();
+        playerAnimator.SetBool("IsWinner", true);
     }
 
 }

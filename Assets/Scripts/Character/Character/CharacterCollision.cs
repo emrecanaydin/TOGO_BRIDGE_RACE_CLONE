@@ -11,9 +11,11 @@ public class CharacterCollision : MonoBehaviour
     UIManager UI;
     CharacterAI characterAI;
     Rigidbody characterRB;
+    Animator characterAnimator;
 
     private void Start()
     {
+        characterAnimator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         characterAI = GetComponent<CharacterAI>();
         characterRB = GetComponent<Rigidbody>();
@@ -120,6 +122,8 @@ public class CharacterCollision : MonoBehaviour
         gameObject.tag = "WinnerEnemy";
         UI.gamePlayPanel.SetActive(false);
         UI.lostPanel.SetActive(true);
+        characterAI.hasTarget = false;
+        characterAnimator.SetBool("IsWinner", true);
     }
 
     IEnumerator CollisionWithPlayer(GameObject player)
